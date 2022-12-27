@@ -84,9 +84,12 @@ export const cartShow=async (req,res,next)=>{
 export const qtyInc=async (req,res,next)=>{
     try {
         const data =await Cart.findOne({_id:req.params.id});
-        await Cart.updateOne({_id:req.params.id},{$set:{productQty:data.productQty+1}})
-        const item =await Cart.findOne({_id:req.params.id});
-        return res.json({qty:item.productQty})
+        let qty=data.qty;
+        let price=data.productPrice;
+        let newprice=price+(price/qty)
+        qty++;
+        await Cart.updateOne({_id:req.params.id},{$set:{productQty:qty,productPrice:newprice}})
+        return res.redirect('/cart')
     } catch (error) {
         console.log(error);
     }
@@ -95,9 +98,9 @@ export const qtyDec=async (req,res,next)=>{
     try {
         const data =await Cart.findOne({_id:req.params.id});
         if(data.productQty>1){
-        await Cart.updateOne({_id:req.params.id},{$set:{productQty:data.productQty-1}}) }
+        await Cart.updateOne({_id:req.params.id},{$set:{productQty:data.productQty-1},productPrice:data.productPrice/(data.productQty-1)}) }
     const item =await Cart.findOne({_id:req.params.id});
-        return res.json({qty:item.productQty})
+        return res.json({qty:item.productQty,price:item.productPrice})
     } catch (error) {
         console.log(error);
     }

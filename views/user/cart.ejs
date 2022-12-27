@@ -180,12 +180,12 @@
                                         <div class="row"></div>
                                     </div>
                                     <div class="col">
-                                        <a href="#" onclick="dec('<%= obj._id%>','<%= index%>'),tot()">-</a><span id="quantity<%= index%>" class="border"><%= obj.productQty%></span><a href="#" onclick="inc('<%= obj._id%>','<%= index%>'),tot()">+</a>
+                                        <a href="/cart/qty/dec/<%= obj._id%>">-</a><span id="quantity<%= index%>" class="border"><%= obj.productQty%></span><a href="/cart/qty/inc/<%= obj._id%>">+</a>
                                         <input type="hidden" name="" value="<%= obj.productQty%>" class="q" id="qty<%= index%>">
                                     </div>
                                     <div class="col">&#8377; <span id="pricee<%=index%>"><%= obj.productPrice%></span> <a href="/cart/del/<%= obj._id%>"><span class="close">&#10005;</span></a></div>
                                     <input type="hidden" value="<%= obj.productPrice%>" class="p" id="price<%= index%>">
-                                    <input type="hidden" value="<%= obj.productPrice%>" id="fixprice<%= index%>">
+                                    <!-- <input type="hidden" value="<%= obj.productPrice%>" id="fixprice<%= index%>"> -->
                                 </div>
                             </div>
                         <%})%>  
@@ -210,45 +210,51 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-         function inc(id,index){
-            let xhttp=new XMLHttpRequest();
-            xhttp.open('GET','/cart/qty/inc/'+id,true)
-            xhttp.send();
-            xhttp.onreadystatechange=function(){
-                if(xhttp.readyState==4){
-                    const data=JSON.parse(this.responseText);
-                   document.getElementById('quantity'+index).innerHTML=data.qty
-                   document.getElementById('qty'+index).value=data.qty;
-                    let fixprice=parseInt(document.getElementById('fixprice'+index).value);
-                  document.getElementById('price'+index).value=fixprice*parseInt(document.getElementById('qty'+index).value);
-                document.getElementById('pricee'+index).innerHTML=document.getElementById('price'+index).value
-                }
-            }
-        }
-        function dec(id,index){
-            let xhttp=new XMLHttpRequest();
-            xhttp.open('GET','/cart/qty/dec/'+id,true)
-            xhttp.send();
-            xhttp.onreadystatechange=function(){
-                if(xhttp.readyState==4){
-                    const data=JSON.parse(this.responseText);
-                   document.getElementById('quantity'+index).innerHTML=data.qty
-                   document.getElementById('qty'+index).value=data.qty;
-                    let fixprice=parseInt(document.getElementById('fixprice'+index).value);
-                  document.getElementById('price'+index).value=fixprice*parseInt(document.getElementById('qty'+index).value);
-                document.getElementById('pricee'+index).innerHTML=document.getElementById('price'+index).value
-                }
+        //  function inc(id,index){
+        //     let xhttp=new XMLHttpRequest();
+        //     xhttp.open('GET','/cart/qty/inc/'+id,true)
+        //     xhttp.send();
+        //     xhttp.onreadystatechange=function(){
+        //         if(xhttp.readyState==4){
+        //             const data=JSON.parse(this.responseText);
+        //            document.getElementById('quantity'+index).innerHTML=data.qty
+        //            document.getElementById('pricee'+index).innerHTML=data.price
+        //            document.getElementById('qty'+index).value=data.qty;
+        //            document.getElementById('price'+index).value=data.price;
+        //         //     let fixprice=parseInt(document.getElementById('fixprice'+index).value);
+        //         //   document.getElementById('price'+index).value=fixprice*parseInt(document.getElementById('qty'+index).value);
+        //         // document.getElementById('pricee'+index).innerHTML=document.getElementById('price'+index).value
+        //         }
+        //     }
+        // }
+        // function dec(id,index){
+        //     let xhttp=new XMLHttpRequest();
+        //     xhttp.open('GET','/cart/qty/dec/'+id,true)
+        //     xhttp.send();
+        //     xhttp.onreadystatechange=function(){
+        //         if(xhttp.readyState==4){
+        //             const data=JSON.parse(this.responseText);
+        //             document.getElementById('quantity'+index).innerHTML=data.qty
+        //            document.getElementById('pricee'+index).innerHTML=data.price
+        //            document.getElementById('qty'+index).value=data.qty;
+        //            document.getElementById('price'+index).value=data.price;
+        //         //    document.getElementById('quantity'+index).innerHTML=data.qty
+        //         //    document.getElementById('qty'+index).value=data.qty;
+        //         //     let fixprice=parseInt(document.getElementById('fixprice'+index).value);
+        //         //   document.getElementById('price'+index).value=fixprice*parseInt(document.getElementById('qty'+index).value);
+        //         // document.getElementById('pricee'+index).innerHTML=document.getElementById('price'+index).value
+        //         }
               
-            }
-        }
+        //     }
+        // }
         function tot(){
-            let qty=document.getElementsByClassName('q');
-            let price=document.getElementsByClassName('p');
-            let total=0;
-            for(let i=0;i<qty.length;i++){
-                total+=parseInt(qty[i].value)*parseInt(price[i].value)
-            }
-            document.getElementById('totalprice').innerHTML=total;
+            // let qty=document.getElementsByClassName('q');
+            // let price=document.getElementsByClassName('p');
+            // let total=0;
+            // for(let i=0;i<qty.length;i++){
+            //     total+=parseInt(qty[i].value)*parseInt(price[i].value)
+            // }
+            // document.getElementById('totalprice').innerHTML=total;
         }
        
     </script>   
