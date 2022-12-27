@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+   <%- include('../_links.ejs')%>
+    <title>Category List</title>
+
+</head>
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+       <%- include('../_header.ejs')%>
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+                <%if(success.length>0){
+                    %>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <strong>success! </strong> <%= success%>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                    <%
+                  }%>
+                  <%if(failure.length>0){
+                    %>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <strong>Error! </strong> <%= failure%>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                    <%
+                  }%>
+                <!-- Begin Page Content -->
+                <div class="container">
+                    <%
+                        if(category.length==0){
+                            %>
+                            <center><h1>No Categories to show</h1></center>
+                            <%
+                        }else{
+                            %>
+                            <table class="table">
+                                <thead>
+                                    <th>S. NO.</th>
+                                    <th>Name</th>
+                                    <th>Edit</th>
+                                    <th>Delete</th>
+                                </thead>
+                                <tbody>
+                                    <%category.forEach((obj,index)=>{
+                                        %>
+                                        <tr>
+                                            <td><%= index+1%></td>
+                                            <td><%= obj.categoryName%></td>
+                                            <td><a href="/admin/category/edit/<%= obj._id%>"><i class='fa fa-edit'></i>
+                                            </a></td>
+                                            <td><a onclick="return confirm('are you sure ?')" href="/admin/category/delete/<%= obj._id%>"><i class='fa fa-trash'></i>
+                                            </a></td>
+                                        </tr>
+                                        <%
+                                    })%>
+                                </tbody>
+                            </table>
+                            <%
+                        }
+                    %>
+                    
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+    <!-- Bootstrap core JavaScript-->
+ 
+    <%- include('../_scripts.ejs')%>
+</body>
+
+</html>
