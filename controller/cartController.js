@@ -49,8 +49,10 @@ export const cart=async (req,res)=>{
 export const cartShow=async (req,res,next)=>{
     try {
         const data =await Cart.findOne({email:req.session.email})
+        const user=await User.findOne({email:req.session.email})
         res.render('user/cart.ejs',{
-            products:data
+            products:data,
+            user:user
         })
     } catch (error) {
         
@@ -102,20 +104,19 @@ export const placeOrder=async (req,res,next)=>{
         const cartId=req.body.id;
         const cartData=await Cart.findOne({_id:cartId});
         const user=await User.findOne({email:req.session.email})
-        console.log(user);
         let obj=[]
         let total=0;
         for(let i=0;i<cartData.productList.length;i++){
             obj.push(cartData.productList[i])
             total+=cartData.productList[i].productPrice;
         }
-        
         await Order.create({
             name:user.name,
             email:user.email,
             total:total,
             date:Date.now(),
-            deliveryAddress:user.address,
+            status:"pending",
+            deliveryAddress:req.body.deliveryAddress,
             items:obj
         })
         await Cart.deleteOne({_id:cartId});

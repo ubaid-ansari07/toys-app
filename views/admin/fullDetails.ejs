@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('_links.ejs')%>
+    <title>Add Category</title>
+  </head>
+
+  <body id="page-top" onload="fun('')">
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+      <!-- Sidebar -->
+      <%- include('_header.ejs')%>
+
+      <!-- Content Wrapper -->
+      <div id="content-wrapper" class="d-flex flex-column">
+        <!-- Main Content -->
+        <div id="content">
+          <!-- Begin Page Content -->
+          <div class="container" style="height: 50vh;">
+            <div class="row">
+               <ul>
+                <li><span><b>User Name</b>:- <%= data.name%></span></li>
+                <li><span><b>Email Address</b>:- <%= data.email%></span></li>
+                <li><span><b>Delivery Address</b>:- <%= data.deliveryAddress%></span></li>
+                <li><span><b>Total Amount</b>:- <%= data.total%></span></li>
+                <li><span><b>Date</b>:- <%= data.date%></span></li>
+                <li><span><b>Status</b>:- <span id="status"><%= data.status%></span></span></li>
+               </ul>
+            </div>
+            <div class="row">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>S.No.</th>
+                            <th>Product Image</th>
+                            <th>Product Name</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <%data.items.forEach((obj,index)=>{%>
+                            <tr>
+                                <td><%= index+1%></td>
+                                <td><img src="/productImages/<%= obj.productImage%>" alt="" height="100"></td>
+                                <td><%= obj.productName%></td>
+                                <td><%= obj.productQty%></td>
+                                <td><%= obj.productPrice%></td>
+                            </tr>
+                            
+                        <%})%>
+                    </tbody>
+                   </table>
+            </div>
+            <div class="row">
+                <button class="btn btn-outline-success" id="send" onclick="sendOrder('<%= data._id%>')">Send Order</button>
+                <button class="btn btn-danger" id="cancel" onclick="cancelOrder('<%= data._id%>')">Cancel Order</button>
+            </div>
+          </div>
+        
+        </div>
+     
+      </div>
+   
+    </div>
+
+    <a class="scroll-to-top rounded" href="#page-top">
+      <i class="fas fa-angle-up"></i>
+    </a>
+  
+
+    <%- include('_scripts.ejs')%>
+    <script>
+      function fun(st){
+        let status=document.getElementById('status');
+        let btn=document.getElementById('send');
+        let cancel=document.getElementById('cancel');
+        if(status.innerText =='pending'){
+            status.style.color='orange'
+            btn.disabled=false;
+            btn.innerText='Send Order'
+        }
+        else if(status.innerText =='delivered'){
+            status.style.color='green'
+            btn.disabled=true;
+            btn.innerText='Delivered'
+            cancel.disabled=true
+        }
+        else{
+            status.style.color='red'
+            btn.disabled=true;
+            cancel.innerText='canceled'
+            cancel.disabled='true'
+        }
+        if(st.length>0){
+            status.innerText=st
+        }
+      }
+
+        function sendOrder(id){
+            let xhttp=new XMLHttpRequest();
+            xhttp.open("GET",'/admin/updatestatus/D/'+id,true);
+            xhttp.send();
+            xhttp.onreadystatechange=function(){
+                if(this.readyState==4){
+                    const data=JSON.parse(this.responseText)
+                    alert(data.mess)
+                    fun(data.status)
+                    location.reload(true)
+                }
+            }
+        }
+
+        
+        function cancelOrder(id){
+            let xhttp=new XMLHttpRequest();
+            xhttp.open("GET",'/admin/updatestatus/C/'+id,true);
+            xhttp.send();
+            xhttp.onreadystatechange=function(){
+                if(this.readyState==4){
+                    const data=JSON.parse(this.responseText)
+                    alert(data.mess)
+                    fun(data.status)
+                    location.reload(true)
+                }
+            }
+        }
+    </script>
+  </body>
+</html>

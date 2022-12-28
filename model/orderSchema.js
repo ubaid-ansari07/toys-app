@@ -20,6 +20,10 @@ const orderSchema=mongoose.Schema({
         type:String,
         required:true
     },
+    status:{
+        type:String,
+        required:true
+    },
     items:[]
 })
 export const Order=new mongoose.model('order',orderSchema)

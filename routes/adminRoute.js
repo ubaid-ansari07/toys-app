@@ -2,6 +2,7 @@ import  express  from "express";
 import {categoryadd, categoryedit, categoryeditshow, categorylist, categoryremove, categoryshowForm} from "../controller/categoryController.js";
 import {productadd, productedit, producteditshow, productlist, productremove, productshowForm} from "../controller/productController.js";
 import multer from "multer";
+import { allOrders,fullDetails, updateStatusD,updateStatusC } from "../controller/orderController.js";
 const upload=multer({dest:'public/productImages'})
 const router=express.Router();
 
@@ -31,4 +32,11 @@ router.get('/product/edit/:id',producteditshow)
 router.post("/product/edit",productedit)
 
 router.get('/product/delete/:id',productremove)
+
+
+//orders
+router.get('/orders',allOrders)
+router.get('/orders/fulldetail/:id',fullDetails)
+router.get('/updatestatus/D/:id',updateStatusD)
+router.get('/updatestatus/C/:id',updateStatusC)
 export default router

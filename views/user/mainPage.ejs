@@ -1,56 +1,3 @@
-<%/*%><!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <title>Document</title>
-    <style>
-      #cart{
-        display: flex;
-        justify-content: end;
-      }
-    </style>
-</head>
-<body>
-  <%- include('_user_header.ejs')%>
-    <div class="container">
-        <center><h1>Our Products</h1></center>
-        <div id="cart">
-          <a href="/cart"><i class="fa fa-cart-plus" aria-hidden="true"></i></a>&nbsp;&nbsp;
-          <span id="cartnumber"><%= cart.length%></span>
-        </div>
-        <div class="row">
-          <%
-            products.forEach(obj=>{
-              %>
-              <div class="col-md-4">
-                <div class="card">
-                  <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
-                    <img src="/productImages/<%= obj.productImage%>" class="" height="300" style="width: 100%;" />
-                    <a href="#!">
-                      <div class="mask" style="background-color: rgba(251, 251, 251, 0.15);"></div>
-                    </a>
-                  </div>
-                  <div class="card-body">
-                    <h5 class="card-title"><%= obj.productName%></h5>
-                    <p><b><%= obj.productPrice%> Rs.</b></p>
-                    <p class="card-text"><%= obj.productDescription%></p>
-                    <a href="/cart/<%= obj._id%>" class="btn btn-primary">Add to cart</a>
-                  </div>
-              </div>
-              </div>
-              <%
-            })
-          %>
-        </div>
-    </div>
-    <script src="	https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html> --><%*/%>
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -71,7 +18,7 @@
           <%if(success.length>0){
             %>
             <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <strong>Error! </strong> <%= success%>
+                <strong>Success! </strong> <%= success%>
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -135,8 +82,96 @@
                   </div>
                   </div>`
             }
+           
             document.getElementById('con').innerHTML=a;
           }
+        }
+      }
+
+
+      function myOrder(){
+        let xhttp=new XMLHttpRequest();
+        xhttp.open('GET','/main/myorders',true)
+        xhttp.send();
+        xhttp.onreadystatechange=function(){
+          if(this.readyState==4){
+            const data=JSON.parse(this.responseText);
+            let a=`<table class="table">
+                      <thead>
+                        <tr>
+                          <th>User Name</th>
+                          <th>Email</th>
+                          <th>Delivery Address</th>
+                          <th>Date</th>
+                          <th>Status</th>
+                          <th>Total Price</th>
+                          <th>Items</th>
+                        </tr>
+                      </thead>
+                  <tbody>`;
+            for(let i=0;i<data.length;i++){
+              a+=`<tr>
+                    <td>${data[i].name}</td>
+                    <td>${data[i].email}</td>
+                    <td>${data[i].deliveryAddress}</td>
+                    <td>${data[i].date}</td>
+                    <td id='status${i}'>${data[i].status}</td>
+                    <td>${data[i].total}</td>
+                    <td><a href="#" onclick="myOrderitems('${data[i]._id}')">More...</a></td>
+                  </tr>
+              `
+              status(i)
+            }
+            a+=`  </tbody>
+                </table>`
+            document.getElementById('con').innerHTML=a;
+          }
+        }
+      }
+
+
+      function myOrderitems(id){
+        let xhttp=new XMLHttpRequest();
+        xhttp.open('GET','/main/items/'+id,true)
+        xhttp.send();
+        xhttp.onreadystatechange=function(){
+          if(this.readyState==4){
+            const data=JSON.parse(this.responseText);
+            let a=`<table class="table">
+                      <thead>
+                        <tr>
+                          <th>Product Image</th>
+                          <th>Product Name</th>
+                          <th>Product Quantity</th>
+                          <th>Price</th>
+                        </tr>
+                      </thead>
+                  <tbody>`;
+            for(let i=0;i<data.item.length;i++){
+              a+=`<tr>
+                    <td>${data.item[i].productName}</td>
+                    <td>${data.item[i].productName}</td>
+                    <td>${data.item[i].productQty}</td>
+                    <td>${data.item[i].productPrice}</td>
+                  </tr>
+              `
+            }
+            a+=`  </tbody>
+                </table>`
+            document.getElementById('con').innerHTML=a;
+          }
+        }
+      }
+      function status(i){
+        const st=document.getElementById('status'+i);
+        if(st.innerText =='pending'){
+          st.style.color='orange'
+        }
+        else if(st.innerText =='delivered'){
+          st.style.color='green'
+        }
+        else{
+          st.style.color='red'
         }
       }
     </script>

@@ -200,6 +200,10 @@
                             <div class="col">TOTAL PRICE</div>
                             <div class="col text-right"><span>&#8377;</span> <span id="totalprice"></span></div>
                         </div>
+                        <div class="row">
+                            <label for="">Delivery Address</label>
+                            <textarea name="deliveryAddress" value="" id="add" cols="30" rows="3" class="form-control"><%= user.address%></textarea>
+                        </div>
                         <button class="btn" style="color:white;" onclick="return confirm('Are you sure to checkout'),placeOrder('<%= products._id%>')">CHECKOUT</button>
                     </div>
                 </div>
@@ -257,17 +261,18 @@
 
 
        function placeOrder(data){
-            console.log(data);
+        let address=document.getElementById('add').value
             let xhttp=new XMLHttpRequest();
             xhttp.open("POST",'http://localhost:8000/cart/placeorder/'+data,true)
             xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            xhttp.send(`id=${data}`)
+            xhttp.send(`id=${data}&deliveryAddress=${address}`)
             xhttp.onreadystatechange=function(){
                 if(this.readyState==4){
                     const data=JSON.parse(this.responseText)
                     alert(data.mess)
                 }
             }
+            location.reload(true)
        }
     </script>   
 </body>
