@@ -160,7 +160,7 @@
 </head>
 <body onload="tot()">
     <div class="container">
-       
+       <%if(products){%>
         <div class="row mt-5" >
             <div class="card">
                 <div class="row">
@@ -168,10 +168,10 @@
                         <div class="title">
                             <div class="row">
                                 <div class="col"><h4><b>Shopping Cart</b></h4></div>
-                                <div class="col align-self-center text-right text-muted"><%= products.length%> items</div>
+                                <div class="col align-self-center text-right text-muted"><%= products.productList.length%> items</div>
                             </div>
                         </div>  
-                        <%products.forEach((obj,index)=>{%>
+                        <%products.productList.forEach((obj,index)=>{%>
                             <div class="row border-top border-bottom">
                                 <div class="row main align-items-center">
                                     <div class="col-2"><img class="" src="productImages/<%= obj.productImage%>" height="50" width="150"></div>
@@ -180,12 +180,11 @@
                                         <div class="row"></div>
                                     </div>
                                     <div class="col">
-                                        <a href="/cart/qty/dec/<%= obj._id%>">-</a><span id="quantity<%= index%>" class="border"><%= obj.productQty%></span><a href="/cart/qty/inc/<%= obj._id%>">+</a>
+                                        <a href="#" onclick="dec('<%= index%>')">-</a><span id="quantity<%= index%>" class="border"><%= obj.productQty%></span><a href="#" onclick="inc('<%= index%>')">+</a>
                                         <input type="hidden" name="" value="<%= obj.productQty%>" class="q" id="qty<%= index%>">
                                     </div>
-                                    <div class="col">&#8377; <span id="pricee<%=index%>"><%= obj.productPrice%></span> <a href="/cart/del/<%= obj._id%>"><span class="close">&#10005;</span></a></div>
+                                    <div class="col">&#8377; <span id="pricee<%=index%>"><%= obj.productPrice%></span> <a href="/cart/del/<%= index%>"><span class="close">&#10005;</span></a></div>
                                     <input type="hidden" value="<%= obj.productPrice%>" class="p" id="price<%= index%>">
-                                    <!-- <input type="hidden" value="<%= obj.productPrice%>" id="fixprice<%= index%>"> -->
                                 </div>
                             </div>
                         <%})%>  
@@ -195,68 +194,81 @@
                         <div><h5><b>Summary</b></h5></div>
                         <hr>
                         <div class="row">
-                            <div class="col" style="padding-left:0;">ITEMS <%= products.length%> </div>
+                            <div class="col" style="padding-left:0;">ITEMS <%= products.productList.length%> </div>
                         </div>
                         <div class="row" style="border-top: 1px solid rgba(0,0,0,.1); padding: 2vh 0;">
                             <div class="col">TOTAL PRICE</div>
                             <div class="col text-right"><span>&#8377;</span> <span id="totalprice"></span></div>
                         </div>
-                        <button class="btn">CHECKOUT</button>
+                        <button class="btn" style="color:white;" onclick="return confirm('Are you sure to checkout'),placeOrder('<%= products._id%>')">CHECKOUT</button>
                     </div>
                 </div>
                 
             </div>
         </div>
+        <%}else{%>
+            <center><h1>Your cart is empty</h1></center>
+        <%}%>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        //  function inc(id,index){
-        //     let xhttp=new XMLHttpRequest();
-        //     xhttp.open('GET','/cart/qty/inc/'+id,true)
-        //     xhttp.send();
-        //     xhttp.onreadystatechange=function(){
-        //         if(xhttp.readyState==4){
-        //             const data=JSON.parse(this.responseText);
-        //            document.getElementById('quantity'+index).innerHTML=data.qty
-        //            document.getElementById('pricee'+index).innerHTML=data.price
-        //            document.getElementById('qty'+index).value=data.qty;
-        //            document.getElementById('price'+index).value=data.price;
-        //         //     let fixprice=parseInt(document.getElementById('fixprice'+index).value);
-        //         //   document.getElementById('price'+index).value=fixprice*parseInt(document.getElementById('qty'+index).value);
-        //         // document.getElementById('pricee'+index).innerHTML=document.getElementById('price'+index).value
-        //         }
-        //     }
-        // }
-        // function dec(id,index){
-        //     let xhttp=new XMLHttpRequest();
-        //     xhttp.open('GET','/cart/qty/dec/'+id,true)
-        //     xhttp.send();
-        //     xhttp.onreadystatechange=function(){
-        //         if(xhttp.readyState==4){
-        //             const data=JSON.parse(this.responseText);
-        //             document.getElementById('quantity'+index).innerHTML=data.qty
-        //            document.getElementById('pricee'+index).innerHTML=data.price
-        //            document.getElementById('qty'+index).value=data.qty;
-        //            document.getElementById('price'+index).value=data.price;
-        //         //    document.getElementById('quantity'+index).innerHTML=data.qty
-        //         //    document.getElementById('qty'+index).value=data.qty;
-        //         //     let fixprice=parseInt(document.getElementById('fixprice'+index).value);
-        //         //   document.getElementById('price'+index).value=fixprice*parseInt(document.getElementById('qty'+index).value);
-        //         // document.getElementById('pricee'+index).innerHTML=document.getElementById('price'+index).value
-        //         }
-              
-        //     }
-        // }
-        function tot(){
-            // let qty=document.getElementsByClassName('q');
-            // let price=document.getElementsByClassName('p');
-            // let total=0;
-            // for(let i=0;i<qty.length;i++){
-            //     total+=parseInt(qty[i].value)*parseInt(price[i].value)
-            // }
-            // document.getElementById('totalprice').innerHTML=total;
+       function inc(index){
+        let xhttp =new XMLHttpRequest();
+        xhttp.open("GET",'/cart/qty/inc/'+index,true)
+        xhttp.send();
+        xhttp.onreadystatechange=function(){
+            if(this.readyState==4){
+            data=JSON.parse(this.responseText);
+            setVal(data,index)
         }
-       
+        }
+       }
+       function dec(index){
+        let xhttp =new XMLHttpRequest();
+        xhttp.open("GET",'/cart/qty/dec/'+index,true)
+        xhttp.send();
+        xhttp.onreadystatechange=function(){
+            if(this.readyState==4){
+            data=JSON.parse(this.responseText);
+            setVal(data,index)
+            }
+        }
+       }
+       function setVal(data,index){
+            document.getElementById('quantity'+index).innerHTML=data.qty;
+            document.getElementById('qty'+index).innerHTML=data.qty;
+            document.getElementById('pricee'+index).innerHTML=data.price;
+            document.getElementById('price'+index).innerHTML=data.price;
+            
+            tot()
+        }
+        function tot(){
+            let price=document.getElementsByClassName('p');
+            let total=0;
+            for(let i=0;i<price.length;i++){
+                total+=parseInt(price[i].value);
+            }
+            document.getElementById('totalprice').innerHTML=total;
+
+            return total
+       }
+
+
+
+
+       function placeOrder(data){
+            console.log(data);
+            let xhttp=new XMLHttpRequest();
+            xhttp.open("POST",'http://localhost:8000/cart/placeorder/'+data,true)
+            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhttp.send(`id=${data}`)
+            xhttp.onreadystatechange=function(){
+                if(this.readyState==4){
+                    const data=JSON.parse(this.responseText)
+                    alert(data.mess)
+                }
+            }
+       }
     </script>   
 </body>
 </html>

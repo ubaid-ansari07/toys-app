@@ -5,6 +5,7 @@ import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import adminRouter from './routes/adminRoute.js'
 import userRouter from './routes/userRoute.js'
+import cartRouter from './routes/cartRoute.js'
 import bodyParser from "body-parser";
 import flash from 'connect-flash'
 import session from "express-session";
@@ -32,6 +33,7 @@ mongoose.connect('mongodb+srv://ubaid_mern:izzaLbqGOr1Ze5D3@cluster0.ejtuxti.mon
             console.log('connected to database');
             app.use('/',userRouter)
             app.use('/admin',adminRouter)
+            app.use('/cart',cartRouter)
             app.listen(8000,()=>{
                 console.log("server started....");
             })

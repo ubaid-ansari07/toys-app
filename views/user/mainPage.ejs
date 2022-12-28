@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<%/*%><!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -49,4 +49,96 @@
     </div>
     <script src="	https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+</html> --><%*/%>
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('_user_links.ejs')%>
+    <title>Add Category</title>
+  </head>
+
+  <body id="page-top">
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+      <!-- Sidebar -->
+      <%- include('_user_header.ejs')%>
+      
+      <!-- Content Wrapper -->
+      <div id="content-wrapper" class="d-flex flex-column">
+        <!-- Main Content -->
+        <div id="content">
+          <%if(success.length>0){
+            %>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>Error! </strong> <%= success%>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+            <%
+          }%>
+          <%if(failure.length>0){
+            %>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>Error! </strong> <%= failure%>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+            <%
+          }%>
+          <!-- Begin Page Content -->
+          <div class="container-fluid" style="height: 50vh;">
+            <div class="row" id="con">
+              
+            </div>
+          </div>
+          <!-- /.container-fluid -->
+        </div>
+        <!-- End of Main Content -->
+      </div>
+      <!-- End of Content Wrapper -->
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+      <i class="fas fa-angle-up"></i>
+    </a>
+    <!-- Bootstrap core JavaScript-->
+    <%- include('_user_scripts.ejs')%>
+    <script>
+      function fun(catName){
+        let xhttp=new XMLHttpRequest();
+        xhttp.open('GET','/main/product/'+catName,true)
+        xhttp.send();
+        xhttp.onreadystatechange=function(){
+          if(this.readyState==4){
+            const data=JSON.parse(this.responseText);
+            let a='';
+            for(let i=0;i<data.length;i++){
+              a+=`<div class="col-md-3">
+                    <div class="card">
+                      <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
+                        <img src="/productImages/${data[i].productImage}" class="" height="300" style="width: 100%;" />
+                        <a href="#!">
+                          <div class="mask" style="background-color: rgba(251, 251, 251, 0.15);"></div>
+                        </a>
+                      </div>
+                      <div class="card-body">
+                        <h5 class="card-title">${data[i].productName}</h5>
+                        <p><b>${data[i].productPrice}Rs.</b></p>
+                        <p class="card-text">${data[i].productDescription}</p>
+                        <a href="/cart/${data[i]._id}" class="btn btn-primary">Add to cart</a>
+                      </div>
+                  </div>
+                  </div>`
+            }
+            document.getElementById('con').innerHTML=a;
+          }
+        }
+      }
+    </script>
+  </body>
 </html>
